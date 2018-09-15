@@ -13,6 +13,7 @@ class Game extends hxd.App
         new Game();
     }
 
+    // Инициализация проекта
     override function init() 
     {
         // Загрузка данных для базы из файла data.cdb
@@ -20,7 +21,8 @@ class Game extends hxd.App
 
         // Получаем данные о всех игровых уровнях, которые хранятся на листе levelData
         var allLevels = Data.levelData;
-        // Загружаем данные о первом (и единственном) уровне, который хранится в базе
+        // Загружаем данные о первом уровне (его индекс = 0), который хранится в базе
+        // и добавляем его отображение на 2d-сцену
         var level = new h2d.CdbLevel(allLevels, 0, s2d);
 
         // Доступ к каждому из тайловых слоев уровня
@@ -42,7 +44,8 @@ class Game extends hxd.App
         // В этот массив будем добавлять наших npc
         var npcs:Array<h2d.Bitmap> = [];
 
-        // Итерируем по всем npc на первом уровне:
+        // Итерируем по всем npc на первом уровне.
+        // Здесь all - это список всех строк в таблице allLevels
         for (npc in allLevels.all[0].npcs)
         {
             // У npc может быть задан item, который является ссылкой 
@@ -88,6 +91,8 @@ class Game extends hxd.App
         var triggerGroup = new h2d.TileGroup(colorTile, s2d);
         
         // Получаем данные слоя triggers у уровня с идентификатором FirstVillage
+        // (если в таблице нет столбца с типом Unique Identifier, 
+        // то для такой таблицы возможно только итерирование с помощью свойства all)
         var triggers = allLevels.get(FirstVillage).triggers;
 
         // Итерируем по всем заданным областям
@@ -158,6 +163,10 @@ class Game extends hxd.App
 
         trace(tileProps.length);
 
+        // Внимание: следующий пример заработает только если
+        // вы замените файл CdbLevel в Heaps на этот файл:
+        // https://github.com/Beeblerox/heaps/blob/patch-1/h2d/CdbLevel.hx
+        /*
         // Словарь с группами тайлов
         var tileGroups = objectsLayer.tileset.groups;
 
@@ -171,7 +180,10 @@ class Game extends hxd.App
         // Покажем на экране анимацию из тайлов группы anim_fall
         var animFall = tileGroups.get("anim_fall");
         var anim = new h2d.Anim(animFall.tiles, 10, s2d);
+        // Конец примера с загрузкой группы тайлов
+        */
         
+        // Итерирование по всем строкам на листе collide
         /*for (coll in Data.collide.all)
         {
             trace(coll.id);
@@ -189,6 +201,9 @@ class Game extends hxd.App
             // У объектов такого типа есть метод has(), позволяющий
             // определить выставлен ли определенный флаг 
             var canClimb = image.stats.has(canClimb);
+            // или так:
+            canClimb = image.stats.has(Data.Images_stats.canClimb);
+            // Читаем значения остальных флагов:
             var canEatBamboo = image.stats.has(canEatBamboo);
             var canRun = image.stats.has(canRun);
 
@@ -197,6 +212,11 @@ class Game extends hxd.App
             {
                 trace("stat: " + stat);
             }
+
+            trace(Type.typeof(image.myEnum));
+
+            // Список имен значений в enum'e (массив строк):
+            trace(Data.Images_myEnum.NAMES);
             
             trace(name);
             trace("canClimb: " + canClimb);
@@ -214,12 +234,27 @@ class Game extends hxd.App
         for (npc in Data.npc.all)
         {
             trace(npc.type);
-            // enum, сгенерированный библиотекой castle
-            trace(Data.Npc_type.Normal);
+
+            // В зависимости от значений поля type можем делать что хотим:
+            switch (npc.type)
+            {
+                case Data.Npc_type.Normal:
+                    trace("You've met a normal npc");
+                case Data.Npc_type.Huge:
+                    trace("You've met a HUGE npc");
+                default:
+                    trace("Ehm, i don't know what to say...");
+            }
 
             // загружаем текст
             trace(hxd.Res.load(npc.datafile).toText());
         }
+
+        // enum, сгенерированный библиотекой castle
+        trace(Data.Npc_type.Normal);
+
+        // У созданного enum’а можно посмотреть список имен его значений:
+        trace(Data.Npc_type.NAMES);
 
         for (item in Data.item.all)
         {

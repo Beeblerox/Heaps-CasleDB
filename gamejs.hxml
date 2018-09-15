@@ -3,5 +3,6 @@
 -lib castle
 # Задаем основной класс приложения с точкой входа
 -main Game
+-D dump=pretty
 # Выходной файл
 -js game.js

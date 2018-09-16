@@ -212,11 +212,6 @@ class Game extends hxd.App
             {
                 trace("stat: " + stat);
             }
-
-            trace(Type.typeof(image.myEnum));
-
-            // Список имен значений в enum'e (массив строк):
-            trace(Data.Images_myEnum.NAMES);
             
             trace(name);
             trace("canClimb: " + canClimb);

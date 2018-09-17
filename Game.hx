@@ -170,16 +170,17 @@ class Game extends hxd.App
         // Словарь с группами тайлов
         var tileGroups = objectsLayer.tileset.groups;
 
-        // Просто считаем количество тайлов в каждой группе
+        // Просто считываем размеры группы в тайлах
         for (key in tileGroups.keys())
         {
             var group = tileGroups.get(key);
-            trace(key + ": " + group.tiles.length);
+            trace('$key: ${group.x}; ${group.y}; ${group.width}; ${group.height}');
         }
         
         // Покажем на экране анимацию из тайлов группы anim_fall
         var animFall = tileGroups.get("anim_fall");
-        var anim = new h2d.Anim(animFall.tiles, 10, s2d);
+        var animTiles = animFall.tile.gridFlatten(animFall.tileset.size);
+        var anim = new h2d.Anim(animTiles, 10, s2d);
         // Конец примера с загрузкой группы тайлов
         */
         
